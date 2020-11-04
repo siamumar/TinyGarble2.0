@@ -173,6 +173,10 @@ class SequentialC2PC { public:
 	}
 	
 	void function_independent() {
+		emp::Timer T;
+		uint64_t dc;
+		double dt;
+		T.start();
 		io->flush();
 		prg.random_bool(preprocess_value, total_PRE);
 		if(fpre->party == ALICE) {
@@ -188,6 +192,8 @@ class SequentialC2PC { public:
 		}
 		pre_ret = 0;
 		io->flush();
+		T.get(dc, dt);
+		cout << dt << " ";
 	}
 
 	void new_const_labels(){	
@@ -261,7 +267,7 @@ class SequentialC2PC { public:
 			memcpy(lmkvm_B->key + i*step, preprocess_key + pre_ret, step*sizeof(block));
 			memcpy(lmkvm_B->value + i*step, preprocess_value + pre_ret, step*sizeof(bool));	
 		}
-		function_independent();		
+		if (pre_ret > (total_PRE - last_step)) function_independent();		
 		memcpy(lmkvm_B->mac + num_steps*step, preprocess_mac + pre_ret, last_step*sizeof(block));
 		memcpy(lmkvm_B->key + num_steps*step, preprocess_key + pre_ret, last_step*sizeof(block));
 		memcpy(lmkvm_B->value + num_steps*step, preprocess_value + pre_ret, last_step*sizeof(bool));
@@ -276,7 +282,7 @@ class SequentialC2PC { public:
 			memcpy(lmkvm_A->key + i*step, preprocess_key + pre_ret, step*sizeof(block));
 			memcpy(lmkvm_A->value + i*step, preprocess_value + pre_ret, step*sizeof(bool));	
 		}
-		function_independent();		
+		if (pre_ret > (total_PRE - last_step)) function_independent();		
 		memcpy(lmkvm_A->mac + num_steps*step, preprocess_mac + pre_ret, last_step*sizeof(block));
 		memcpy(lmkvm_A->key + num_steps*step, preprocess_key + pre_ret, last_step*sizeof(block));
 		memcpy(lmkvm_A->value + num_steps*step, preprocess_value + pre_ret, last_step*sizeof(bool));
@@ -505,9 +511,15 @@ class SequentialC2PC { public:
 		}
 		
 		if(ANDS_ret > 3*(total_ANDS-num_ands)){
+			emp::Timer T;
+			uint64_t dc;
+			double dt;
+			T.start();
 			io->flush();
 			fpre->refill();	
 			ANDS_ret = 0;
+			T.get(dc, dt);
+			cout << dt << " ";
 		}
 
 		ANDS_mac = fpre->MAC + ANDS_ret;

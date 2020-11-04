@@ -35,7 +35,7 @@ string sequential_execution(int party, NetIO* io, string netlist_address, string
 	int total_ANDS = min(NUM_ANDS, max({BS_MAL_MIN, bs_mal, num_ands}, comp));
 	int total_PRE = min(NUM_INPUTS + NUM_ANDS, bs_mal);
 	
-	if (report) cout << total_ANDS << " " << total_PRE << endl;	
+	/*if (report)*/ cout << total_ANDS << " " << total_PRE << " ";	
 	
 	SequentialC2PC* twopc = new SequentialC2PC(io, party, total_PRE, total_ANDS);
 	io->flush();

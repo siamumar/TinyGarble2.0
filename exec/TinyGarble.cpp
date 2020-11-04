@@ -95,17 +95,17 @@ int main(int argc, char** argv) {
 	
 	if (report) cout << "Party " << party << "\nInput\t" << input_hex_str << "\nOutput\t" << output_hex_str << endl;
 	else {
-		cout << output_hex_str << "\t";	
+		//cout << output_hex_str << "\t";	
 		uint64_t DC = 0;
 		double DT = 0;
 		for (int j = 0; j < 4; ++j){
-			cout << dc[j] << "\t" << dt[j] << "\t";
+			//cout << dc[j] << "\t" << dt[j] << "\t";
 			DC += dc[j];
 			DT += dt[j];
 		}
-		cout << DC << "\t" << DT << "\t";
-		cout << memory_usage << "\t";
-		if (vm.count("sh")) cout << (float)(io->num_bytes_sent)/1024/1024 << endl;
+		//cout << DC << "\t" << DT << "\t";
+		cout << memory_usage << endl;
+		//if (vm.count("sh")) cout << (float)(io->num_bytes_sent)/1024/1024 << endl;
 	}	
 	
 	delete io;
