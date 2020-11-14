@@ -193,7 +193,7 @@ class SequentialC2PC { public:
 		pre_ret = 0;
 		io->flush();
 		T.get(dc, dt);
-		cout << dt << " ";
+		//cout << dt << " ";
 	}
 
 	void new_const_labels(){	
@@ -519,7 +519,7 @@ class SequentialC2PC { public:
 			fpre->refill();	
 			ANDS_ret = 0;
 			T.get(dc, dt);
-			cout << dt << " ";
+			//cout << dt << " ";
 		}
 
 		ANDS_mac = fpre->MAC + ANDS_ret;

@@ -104,6 +104,7 @@ int main(int argc, char** argv) {
 			DT += dt[j];
 		}
 		//cout << DC << "\t" << DT << "\t";
+		cout << DT << "\t";
 		cout << memory_usage << endl;
 		//if (vm.count("sh")) cout << (float)(io->num_bytes_sent)/1024/1024 << endl;
 	}	
