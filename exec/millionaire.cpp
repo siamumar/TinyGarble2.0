@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
 	TinyGarblePI* TGPI; 
 	
 	if (vm.count("sh")){
-		cout << "testing program interface in semi-honest setting" << endl;
+		cout << "Millionair's Problem in semi-honest setting" << endl;
 		TGPI_SH = new TinyGarblePI_SH(io, party);
 		io->flush();
 		millionaire(TGPI_SH);		
