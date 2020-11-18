@@ -545,7 +545,11 @@ class TinyGarblePI_SH{
 		sequential_2pc_exec_sh(twopc, b_x, a_x, nullptr, y_x, party, io, &cf, cycles, repeat, output_mode);
 	}
 	void mult(block*& y_x, block* a_x, block* b_x, uint64_t bit_width){
-		mult(y_x, a_x, b_x, bit_width, bit_width);
+		/*only works for 64 bits now, need to add the netlist for other bit-widths*/
+		string netlist_address = string(NETLIST_PATH_PI) + "mult_" + to_string(bit_width) + "bit.emp.bin";	
+		CircuitFile cf(netlist_address.c_str(), true);
+		uint64_t cycles = 1, repeat = 1, output_mode = 2;
+		sequential_2pc_exec_sh(twopc, b_x, a_x, nullptr, y_x, party, io, &cf, cycles, repeat, output_mode);
 	}
 	void mult(block*& y_x, block* a_x, int64_t b, uint64_t bit_width_a, uint64_t bit_width_b){
 		uint64_t bit_width_y = bit_width_a + bit_width_b - 1;
