@@ -127,14 +127,14 @@ void unit_test(auto TGPI) {
 	int64_t temp = rand_L_U();
 	auto temp_x = TGPI->TG_int_init(PUBLIC, 64, temp);
 	auto _t9_x = TGPI->TG_int(64);
-	//auto _t9__x = TGPI->TG_int(64);
+	auto _t9__x = TGPI->TG_int(64);
 	TGPI->mult(_t9_x, temp_x, temp_x, 64);
-	//TGPI->mult(_t9__x, a_x, b, 64);
+	TGPI->mult(_t9__x, a_x, b, 64);
 	int64_t _t9_chk = TGPI->reveal(_t9_x, 64);
-	//int64_t _t9__chk = TGPI->reveal(_t9__x, 64);
+	int64_t _t9__chk = TGPI->reveal(_t9__x, 64);
 	if (TGPI->party == BOB) 
-		// verify_n_report("multiplication n_n_2_n of public or secret values", (vector<int64_t>){t9_chk, t9__chk}, (vector<int64_t>){a * b, a * b});
-		verify_n_report("multiplication n_n_2_n of secret values", _t9_chk, temp*temp);
+		 verify_n_report("multiplication n_n_2_n of public or secret values", (vector<int64_t>){t9_chk, t9__chk}, (vector<int64_t>){a * b, a * b});
+		//verify_n_report("multiplication n_n_2_n of secret values", _t9_chk, temp*temp);
 
 	auto t10_x = TGPI->TG_int(a_bits);
 	TGPI->div(t10_x, a_x, b_x, a_bits, b_bits);

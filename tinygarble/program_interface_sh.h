@@ -570,6 +570,24 @@ class TinyGarblePI_SH{
 		clear_TG_int(a1_x);
 		clear_TG_int(a2_x);
 	}
+	void mult(block*& y_x, block* a_x, int64_t b, uint64_t bit_width){
+		assign(y_x, (int64_t)0, bit_width);
+		auto a1_x = TG_int(bit_width);
+		if(b < 0) {
+			neg(a1_x, a_x, bit_width);
+			b = -b;
+		}
+		else assign(a1_x, a_x, bit_width);
+		auto a2_x = TG_int(bit_width);
+		assign(a2_x, a1_x, bit_width, bit_width);
+		bitset<64> bits(b);
+		for (uint64_t i = 0; i < bit_width; i++){
+			if (bits[i]) add(y_x, y_x, a2_x, bit_width);
+			left_shift(a2_x, 1, bit_width);
+		}
+		clear_TG_int(a1_x);
+		clear_TG_int(a2_x);
+	}
 	
 	void mat_mult(uint64_t row_A, uint64_t inner, uint64_t col_B, auto &A, auto &B, auto &C, int64_t rs_bits, uint64_t bit_width_A, uint64_t bit_width_B, uint64_t bit_width_C, uint64_t bit_width_G){
 	

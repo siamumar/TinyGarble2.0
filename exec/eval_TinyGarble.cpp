@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "tinygarble/TinyGarble_config.h"
+#include "exec/unit_eval.h"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
 	string input_hex_str, init_hex_str, output_hex_str;
 	int cycles, repeat, output_mode;
 	string in_file, in_file_A, in_file_B;
-	int bs_mal = INT_MAX;
+	int bs_mal = 4532;
 	double memory_usage, MEMORY_USAGE;
 	double transferred_data, TRANSFERRED_DATA;
 	string bench_file, eval_file;	
@@ -55,9 +56,10 @@ int main(int argc, char** argv) {
 	("init,j", po::value<string>(&init_hex_str)->default_value("0"),"hexadecimal init (little endian).") //
 	("repeat,r", po::value<int>(&repeat)->default_value(1),"number of times to repeat the run") //
 	("file,f", po::value<string>(&bench_file)->default_value(string(BIN_PATH) + "benchmarks.txt"),"netlist, cycles, output_mode read from this file") //
-	("batch_size,b", po::value<int>(&bs_mal)->default_value(INT_MAX),"pre-processing bacth size for malicious setting\n\
+	("batch_size,b", po::value<int>(&bs_mal)->default_value(4532),"pre-processing bacth size for malicious setting\n\
 	default:choose adaptively\nused for setting maximum available memory")  //
 	("num_eval,t", po::value<int>(&num_eval)->default_value(10),"number of times to average evaluation") //
+	("pi", "evaluate program interface") //
 	("sh", "semi-honest security model"); 
 	
 	po::variables_map vm;
@@ -74,6 +76,32 @@ int main(int argc, char** argv) {
 		cout << desc << endl;
 		return -1;
 	}	
+
+	if (vm.count("pi")){
+		int party;
+		if(pid > 0) party = ALICE;
+		else party = BOB;
+		
+		NetIO* io = new NetIO(party==ALICE ? nullptr:server_ip.c_str(), port, true);
+		io->set_nodelay();
+		
+		TinyGarblePI_SH* TGPI_SH;
+		TinyGarblePI* TGPI; 
+		
+		if (vm.count("sh")){
+			cout << "evaluating program interface in semi-honest setting" << endl;
+			TGPI_SH = new TinyGarblePI_SH(io, party);
+			io->flush();
+			unit_eval(TGPI_SH, 64, num_eval);		
+		}
+		else {
+			cout << "evaluating  program interface in malicious setting with batch size " << bs_mal << endl;
+			TGPI = new TinyGarblePI(io, party, bs_mal, bs_mal);
+			io->flush();
+			unit_eval(TGPI, 64, num_eval);
+		}
+		return 0;
+	}
 		
 	ifstream fin(bench_file.c_str(), std::ios::in);
 	if (!fin.good()){
